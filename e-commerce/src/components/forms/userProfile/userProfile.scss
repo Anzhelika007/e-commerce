@@ -1,0 +1,141 @@
+.input-wrapper-header {
+  position: relative;
+  width: fit-content;
+  gap: 30px;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-wrapper-header .btn-show {
+  position: static;
+  margin-bottom: 20px;
+}
+
+.form__profile .profile-fieldset {
+  border: 1px solid rgb(221, 221, 221);
+  margin-bottom: 20px;
+}
+
+.fieldset .btn-show:not(.profile-fieldset .btn-show) {
+  position: static;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  width: 30px;
+  font-size: 2rem;
+}
+
+.profile-fieldset .btn-show {
+  position: static;
+}
+
+.btn-password-edit {
+  width: auto;
+  padding: 0 10px;
+}
+
+.fieldset .input-wrapper-address {
+  margin: 0;
+}
+
+.profile-fieldset {
+  border: none;
+}
+
+.textfield-component {
+  width: 100%;
+  max-width: 300px;
+  display: block;
+  font-weight: bold;
+  color: #555;
+  font-size: 14px;
+}
+
+.textfield-title {
+  text-align: start;
+}
+
+.textfield-body {
+  text-align: start;
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #a0a0a0;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #333;
+}
+
+.address-list {
+  width: 80%;
+  margin: 20px auto;
+  min-width: 80%;
+  max-width: 400px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background-color: #f9f9f9;
+}
+.address-list-table {
+  display: block;
+  min-height: 50px;
+  max-height: 250px;
+  margin-top: 20px;
+  // padding: 0 4px;
+  border: 1px solid #a0a0a0;
+  border-radius: 8px;
+  border-collapse: collapse;
+  overflow-y: scroll;
+}
+
+.address-list-table-head {
+  position: sticky;
+  top: 0;
+  // height: 50px;
+  background-color: #bbbbbb;
+}
+
+.address-list-header {
+  display: flex;
+  justify-content: center;
+  font-size: 4.4rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 6.2rem;
+  color: #161c24;
+  text-align: center;
+  padding-top: 20px;
+  // padding-bottom: 10px;
+}
+.address-list-table-legend {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.address-list-button-new {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #4295e4;
+  color: #fff;
+  border-radius: 8px;
+  height: 30px;
+  width: 30px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: color 0.3s;
+}
+
+.address-list-table-head-line-field {
+  width: 1%;
+  border-bottom: 1px solid #d0d0d0;
+}
+// .address-list-table-body {
+
+// }
+// .address-list-table-body-line {
+
+// }

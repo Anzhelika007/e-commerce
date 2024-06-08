@@ -1,0 +1,22 @@
+.call {
+  background: $Bg-section;
+  padding: 64px 0 56px;
+  &-box {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+  }
+  &-text {
+    text-align: center;
+  }
+}
+/* form */
+.form__call {
+  display: flex;
+  gap: 24px;
+}
+
+.form__call-btn {
+  @include btnBlue();
+}

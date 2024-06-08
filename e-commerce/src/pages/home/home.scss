@@ -1,0 +1,101 @@
+.slider__section {
+  background-color: $Bg-product-decription;
+  mix-blend-mode: multiply;
+  padding-bottom: 50px;
+}
+.number {
+  background: $Bg-section;
+  padding: 40px 0;
+  &__box {
+    display: flex;
+    justify-content: center;
+    gap: 82px;
+  }
+  &__box-item {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  &__box-number {
+    @include font($size: 3.2rem, $height: 3.8rem, $weight: 600);
+    color: $Black;
+    text-align: center;
+  }
+  &__box-text {
+    @include font($size: 1.6rem, $height: 2.6rem, $weight: 600);
+  }
+}
+.we {
+  padding-top: 93px;
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+  &-title {
+    text-align: center;
+    padding-bottom: 45px;
+  }
+  &__reason {
+    display: flex;
+    gap: 30px;
+  }
+  &__reason-item {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    box-shadow: $B-shadow-service;
+  }
+  &__reason-img {
+    width: 82px;
+    height: 82px;
+  }
+  &__reason-text {
+    @include font($size: 2rem, $height: 3.2rem, $weight: 400);
+    text-align: center;
+  }
+}
+.categoryes {
+  padding-top: 100px;
+
+  &__box {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    align-items: center;
+  }
+  &-title {
+    text-align: center;
+  }
+  &__gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+  }
+
+  &-btn {
+    @include btnBlue();
+  }
+}
+.popular-products {
+  padding: 100px 0 96px 0;
+  &-box {
+    position: relative;
+  }
+  &-title {
+    padding-bottom: 64px;
+  }
+}
+.call {
+  background: $Bg-section;
+  padding: 64px 0 56px;
+  &-box {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+  }
+  &-text {
+    text-align: center;
+  }
+}

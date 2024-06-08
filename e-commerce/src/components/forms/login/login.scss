@@ -1,0 +1,14 @@
+.form__login {
+  max-width: 400px;
+  min-width: 300px;
+  &-wrapper {
+    min-width: 100%;
+  }
+  &-btn {
+    width: 200px;
+    margin: 0 auto;
+    &:hover {
+      color: $White;
+    }
+  }
+}

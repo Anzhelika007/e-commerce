@@ -1,0 +1,59 @@
+.modal {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: auto;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+  padding-top: 4rem;
+  border-radius: 2rem;
+  transform: translate(-50%, -50%);
+  background-color: whitesmoke;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.modal-header {
+  position: fixed;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 120%;
+  height: 4rem;
+  color: white;
+  background-color: black;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.close-btn {
+  position: absolute;
+  display: block;
+  top: 1rem;
+  right: 4rem;
+  width: 2rem;
+  height: 2rem;
+  filter: invert(100%);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.close-btn {
+  fill: white;
+}
+
+.close-btn:hover {
+  transform: scale(115%);
+}
+
+.modal-text {
+  padding-top: 1rem;
+  font-size: 2rem;
+  text-align: justify;
+}

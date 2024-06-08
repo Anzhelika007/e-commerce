@@ -1,0 +1,19 @@
+.category__card {
+  width: 600px;
+  height: 470px;
+  position: relative;
+  &-bg {
+    min-width: 600px;
+  }
+  &__wrapper {
+    position: absolute;
+    left: 40px;
+    bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  &-btn {
+    @include btnInherit();
+  }
+}

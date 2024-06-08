@@ -1,0 +1,43 @@
+.red {
+  text-shadow: 1px 1px red;
+}
+.navigation {
+  &__list {
+    display: flex;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+    @media (max-width: 700px) {
+      flex-direction: column;
+      line-height: 30px;
+    }
+  }
+  &__list-item {
+    @include font($size: 2rem, $height: 2.4rem, $weight: 300, $style: normal);
+    color: $Black;
+    white-space: nowrap;
+    line-height: 82px;
+    @media (max-width: 700px) {
+      flex-direction: column;
+      line-height: 30px;
+    }
+  }
+  &__user-is-logged {
+    pointer-events: none;
+    cursor: default;
+    color: #d9d9d9;
+    text-shadow: none;
+  }
+}
+.active {
+  font-weight: 400;
+  color: red;
+}
+
+@media (max-width: 1200px) {
+  .navigation {
+    &__list {
+      gap: 20px;
+    }
+  }
+}

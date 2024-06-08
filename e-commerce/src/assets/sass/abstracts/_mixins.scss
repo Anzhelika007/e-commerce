@@ -1,0 +1,36 @@
+@mixin font($size, $height: $size, $weight: 400, $style: normal) {
+  font-size: $size;
+  font-style: $style;
+  font-weight: $weight;
+  line-height: $height;
+}
+
+@mixin btnBlue($width: 220px, $height: 50px) {
+  @extend %font-base;
+  @include font($size: 1.6rem, $height: 2.6rem, $weight: 500, $style: normal);
+  color: $White;
+  background: $Blue;
+  width: $width;
+  height: $height;
+  border: none;
+  cursor: pointer;
+}
+
+@mixin btnInherit($width: 220px, $height: 50px) {
+  @extend %font-base;
+  @include font($size: 1.6rem, $height: 2.6rem, $weight: 500, $style: normal);
+  color: $Black;
+  background: inherit;
+  width: $width;
+  height: $height;
+  border: 1px solid $Black;
+  cursor: pointer;
+}
+
+@mixin inputTextEmail($width: 240px, $height: 50px) {
+  width: $White;
+  height: $height;
+  background: $Bg-input-text;
+  border: none;
+  padding: 16px 0 16px 12px;
+}

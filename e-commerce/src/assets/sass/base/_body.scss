@@ -1,0 +1,123 @@
+html {
+  font-size: 10px;
+  scroll-behavior: smooth;
+  background-color: $White;
+}
+
+body {
+  @extend %font-base;
+  @include font($size: 1.6rem, $height: 2.6rem, $weight: 400);
+  min-height: 100vh;
+  color: $Grey;
+  background-color: $White;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  text-align: center;
+  min-height: 100vh;
+  justify-content: space-between;
+  margin: 0 auto;
+}
+
+h1 {
+  @include font($size: 4.4rem, $height: 6.2rem, $weight: 600, $style: normal);
+  color: $Black;
+}
+
+h2 {
+  @include font($size: 4.4rem, $height: 6.2rem, $weight: 600, $style: normal);
+  color: $Black;
+}
+
+h3 {
+  @include font($size: 3.2rem, $height: 3.8rem, $weight: 600, $style: normal);
+  color: $Black;
+}
+
+h4 {
+  @include font($size: 2.8rem, $height: 4.2rem, $weight: 600, $style: normal);
+  color: $Black;
+}
+
+h5 {
+  @include font($size: 2.4rem, $height: 3rem, $weight: 600, $style: normal);
+  color: $Black;
+}
+
+h5 {
+  @include font($size: 2.2rem, $height: 3.4rem, $weight: 500, $style: normal);
+  color: $Black;
+}
+
+.container {
+  max-width: $width-desktop;
+  width: 90vw;
+  padding: 0;
+  margin: 0 auto;
+  box-sizing: border-box;
+
+  @media (max-width: 770px) {
+    max-width: $width-tablet;
+  }
+  @media (max-width: 400px) {
+    max-width: $width-mobile;
+  }
+}
+
+.wrapper {
+  padding: 0 100px;
+}
+
+.btn {
+  @include btnBlue;
+}
+button[disabled='disabled'],
+button:disabled {
+  background-color: $Grey-dark-pagination;
+  cursor: none;
+}
+.none {
+  display: none;
+}
+
+@media (max-width: 1200px) {
+  .wrapper {
+    padding: 0 1vw;
+  }
+}
+.spinner {
+  width: 30%;
+  min-width: 150px;
+  height: 100%;
+  text-align: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+@media (max-width: 700px) {
+  //   body {
+  //   @include font($size: 1.6rem, $height: 150%, $weight: 400);
+  //   }
+  //   h1{
+  //     @include font($size: 4.2rem, $height: 115%, $weight: 600, $style: normal);
+  //     color: $beige-light;
+  //   }
+  //   h2{
+  //     @include font($size: 3.2rem, $height:125%, $weight: 600, $style: normal);
+  //   }
+  // .container{
+  //   padding: 0 16px;
+  // }
+}
+
+/* fix content */
+// .free-page {
+//   text-align: center;
+//   line-height: 60vh;
+// }

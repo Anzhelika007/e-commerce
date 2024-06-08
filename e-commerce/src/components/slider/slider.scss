@@ -1,0 +1,57 @@
+.slider {
+  display: flex;
+  width: 100%;
+  &-box {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+  }
+  &-images {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  &-images-active {
+    border: 2px solid blue;
+  }
+  &-main-box {
+    flex: 1;
+    width: 150px;
+    height: 150px;
+  }
+  &-main-img {
+    height: 100%;
+    margin: 0 auto;
+    cursor: pointer;
+  }
+  &-dots {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    gap: 10px;
+    & > * {
+      width: 10px;
+      height: 10px;
+    }
+  }
+}
+/* Modal */
+.modalContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  min-width: 300px;
+  min-height: 400px;
+  padding: 40px 20px 20px;
+  text-align: center;
+  background-color: white;
+  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
+}
+// .modalOverlay {
+//   background-color: red;
+// }

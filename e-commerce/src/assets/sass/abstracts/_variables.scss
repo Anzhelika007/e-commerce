@@ -1,0 +1,46 @@
+/* Text */
+$Stroke: #eaeaea;
+$Light-grey: #c4cdd5;
+$Grey-primary: #a4a4a4;
+$Grey: #454f5b;
+$White: #fff;
+$Light-blue: #add7ff;
+$Blue: #4295e4;
+$Black: #161c24;
+$Black-dark: #1b1a20;
+$Yellow: #e2c355;
+
+/* Navigation  bread crumbs*/
+$Black-pagination: #141414;
+$Grey-dark-pagination: #575757;
+$Grey-dark-pagination: #9d9d9d;
+
+/* Background */
+$Bg-base: rgba(0, 0, 0, 0.02);
+$Bg-navigation: #fff;
+$Bg-section: #f2f8ff;
+$Bg-footer: #0d2436;
+$Bg-card:
+  linear-gradient(0deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.02) 100%),
+  url(<path-to-image>) lightgray 50% / cover no-repeat;
+$Bg-product-payment: #f6f7f9;
+$Bg-product-decription: #fafafa;
+$Bg-input-text: rgba(22, 28, 36, 0.04);
+$Bg-overlay: rgba(22, 28, 36, 0.3);
+
+/* Border */
+$Border-card: 1px solid var(--Stroke, #eaeaea);
+$Border-slaider-projects: 1px solid var(--Light-grey, #c4cdd5);
+
+/* box-shadow */
+$B-shadow-header: 0px -1px 0px 0px #c4cdd5 inset;
+$B-shadow-service:
+  -1px 0px 0px 0px #c4cdd5 inset,
+  1px 0px 0px 0px #c4cdd5 inset;
+$B-shadow-card: rgba(0, 0, 0, 0.02);
+$B-shadow-label-gift: 0px 2px 5px 0px rgba(0, 0, 0, 0.03);
+
+/* Width */
+$width-desktop: 1440px;
+$width-tablet: 768px; /*?*/
+$width-mobile: 390px;
