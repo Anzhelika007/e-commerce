@@ -14,6 +14,7 @@
 /* form */
 .form__call {
   display: flex;
+  flex-wrap: wrap;
   gap: 24px;
 }
 

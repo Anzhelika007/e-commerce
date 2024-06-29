@@ -1,4 +1,4 @@
-import { useEffect, useState, FormEvent, ChangeEvent } from 'react';
+import { useEffect, useState, FormEvent, ChangeEvent, useRef } from 'react';
 import {
   IFilter,
   IProductResponseCategory,
@@ -10,22 +10,34 @@ import {
 
 type Props = {
   getProductsFilter: (data: IProductResponseCategory) => void;
+  offset: number;
+  sort: string;
+  setFilterSetting: React.Dispatch<React.SetStateAction<IFilter>>;
+  handleClearFilters: () => void;
 };
 
-function FilterCatalog({ getProductsFilter }: Props): React.ReactElement {
-  const filterPanelPropsDefault: IFilter = {
-    priceMax: 0,
-    priceMin: 0,
-    color: [],
-    model: [],
-    fractionDigits: 0,
-  };
+export const defaultFilterSettings: IFilter = {
+  priceMin: 0,
+  priceMax: 0,
+  color: [],
+  model: [],
+  fractionDigits: 0,
+};
 
-  const [filterPanelProps, setFilterPanel] = useState(filterPanelPropsDefault);
-  const [priceMin, setPriceMin] = useState(filterPanelPropsDefault.priceMin);
-  const [priceMax, setPriceMax] = useState(filterPanelPropsDefault.priceMax);
+function FilterCatalog({
+  getProductsFilter,
+  offset,
+  sort,
+  setFilterSetting,
+  handleClearFilters,
+}: Props): React.ReactElement {
+  const formRefFilter = useRef<HTMLFormElement>(null);
+
+  const [filterPanelProps, setFilterPanel] = useState(defaultFilterSettings);
+  const [priceMin, setPriceMin] = useState(defaultFilterSettings.priceMin);
+  const [priceMax, setPriceMax] = useState(defaultFilterSettings.priceMax);
   const [fractionDigits, setFractionDigits] = useState(
-    filterPanelPropsDefault.fractionDigits
+    defaultFilterSettings.fractionDigits
   );
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
@@ -73,34 +85,47 @@ function FilterCatalog({ getProductsFilter }: Props): React.ReactElement {
       model: selectedModels,
       fractionDigits,
     };
-    const result = await filterProducts(formData);
+    setFilterSetting(formData);
+    const result = await filterProducts(formData, offset, sort);
 
     getProductsFilter(result);
   };
-  // clear filter
-  // const handleClearFilters = async () => {
-  //   setPriceMin(filterPanelPropsDefault.priceMin);
-  //   setPriceMax(filterPanelPropsDefault.priceMax);
-  //   setFractionDigits(filterPanelPropsDefault.fractionDigits);
-  //   setSelectedColors([]);
-  //   setSelectedModels([]);
-  //   if (formRef.current) {
-  //     const form = formRef.current;
-  //     const inputs = form.querySelectorAll('input');
-  //     inputs.forEach(input => {
-  //       if (input.type === 'checkbox') {
-  //         input.checked = false;
-  //       } else {
-  //         input.value = '';
-  //       }
-  //     });
-  //   }
-  // };
+
+  // Clear filter
+  const handleClearFiltersForm = async () => {
+    // set default val
+    setPriceMin(defaultFilterSettings.priceMin);
+    setPriceMax(defaultFilterSettings.priceMax);
+    setFractionDigits(defaultFilterSettings.fractionDigits);
+    setSelectedColors(defaultFilterSettings.color);
+    setSelectedModels(defaultFilterSettings.model);
+
+    // clear form fields
+    if (formRefFilter.current) {
+      const form = formRefFilter.current;
+      const inputs = form.querySelectorAll('input');
+      inputs.forEach((input: HTMLInputElement) => {
+        if (input.type === 'checkbox') {
+          const checkbox = input as HTMLInputElement;
+          checkbox.checked = false;
+        } else {
+          const inputText = input as HTMLInputElement;
+          inputText.value = '';
+        }
+      });
+    }
+    // catalog => set default val and change state props products => call useEff
+    handleClearFilters();
+  };
 
   return (
     <details>
       <summary>Filter</summary>
-      <form className="form-filter" onSubmit={onSubmitFilter}>
+      <form
+        ref={formRefFilter}
+        className="form-filter"
+        onSubmit={onSubmitFilter}
+      >
         <fieldset className="filter-price">
           <legend>Price</legend>
           <label htmlFor="priceMin">
@@ -110,8 +135,6 @@ function FilterCatalog({ getProductsFilter }: Props): React.ReactElement {
               type="number"
               id="priceMin"
               placeholder={`${filterPanelProps.priceMin}`}
-              // min={filterPanelProps.priceMin}
-              // max={filterPanelProps.priceMax}
               onChange={(e) => setPriceMin(Number(e.target.value))}
             />
           </label>
@@ -122,8 +145,6 @@ function FilterCatalog({ getProductsFilter }: Props): React.ReactElement {
               type="number"
               id="priceMax"
               placeholder={`${filterPanelProps.priceMax}`}
-              // min={filterPanelProps.priceMin}
-              // max={filterPanelProps.priceMax}
               onChange={(e) => setPriceMax(Number(e.target.value))}
             />
           </label>
@@ -131,7 +152,7 @@ function FilterCatalog({ getProductsFilter }: Props): React.ReactElement {
         <fieldset className="filter-fieldset filter-color">
           <legend>Color</legend>
           {filterPanelProps.color.map((color) => (
-            <label htmlFor={color} key={color}>
+            <label htmlFor={color} key={`${color}-c`}>
               <input
                 className="input-checkbox"
                 type="checkbox"
@@ -148,11 +169,11 @@ function FilterCatalog({ getProductsFilter }: Props): React.ReactElement {
           <legend>Model</legend>
 
           {filterPanelProps.model.map((model) => (
-            <label htmlFor={model} key={model}>
+            <label htmlFor={`${model}-m`} key={`${model}-m`}>
               <input
                 className="input-checkbox"
                 type="checkbox"
-                id={model}
+                id={`${model}-m`}
                 name="filter-model"
                 value={model}
                 onChange={handleModelChange}
@@ -161,12 +182,18 @@ function FilterCatalog({ getProductsFilter }: Props): React.ReactElement {
             </label>
           ))}
         </fieldset>
-        {/* <button type="button" className="category-btn filter-btn" onClick={handleClearFilters}>
-          Clear Filters
-        </button> */}
-        <button type="submit" className="category-btn filter-btn">
-          Send
-        </button>
+        <div className="filter-box-btn">
+          <button
+            type="button"
+            className="filter-btn"
+            onClick={handleClearFiltersForm}
+          >
+            Clear
+          </button>
+          <button type="submit" className="filter-btn">
+            Send
+          </button>
+        </div>
       </form>
     </details>
   );

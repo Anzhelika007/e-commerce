@@ -123,10 +123,10 @@ function creatingAddressActions(data: Address, user: User) {
 
 export async function addAddress(formData: Address) {
   const user = await getCustomerInfo();
-  if (!user) return { statusCode: 'err', message: 'save failed' };
+  if (user.isError) return { statusCode: 'err', message: 'save failed' };
 
   const userToken = await getUserToken();
-  if (!userToken) return { statusCode: 'err', message: 'save failed' };
+  if (userToken.isError) return { statusCode: 'err', message: 'save failed' };
 
   const updateActions = [
     {
@@ -136,11 +136,11 @@ export async function addAddress(formData: Address) {
   ];
 
   const body = {
-    version: user.version,
+    version: user.thing!.version,
     actions: updateActions,
   };
 
-  const answer = sendActions(body, userToken.access_token);
+  const answer = sendActions(body, userToken.thing!.access_token);
 
   return answer;
 }
@@ -160,11 +160,11 @@ export async function deleteAddress(addressID: string) {
   ];
 
   const body = {
-    version: user.version,
+    version: user.thing!.version,
     actions: updateActions,
   };
 
-  const answer = sendActions(body, userToken.access_token);
+  const answer = sendActions(body, userToken.thing!.access_token);
 
   return answer;
 }
@@ -173,7 +173,7 @@ export async function changeAddress(formData: Address) {
   const user = await getCustomerInfo();
   if (!user) return { statusCode: 'err', message: 'save failed' };
 
-  const updateActions = creatingAddressActions(formData, user);
+  const updateActions = creatingAddressActions(formData, user.thing!);
   if (updateActions.length === 0)
     return { statusCode: 'err', message: 'No changes nothing to save' };
 
@@ -181,11 +181,11 @@ export async function changeAddress(formData: Address) {
   if (!userToken) return { statusCode: 'err', message: 'save failed' };
 
   const body = {
-    version: user.version,
+    version: user.thing!.version,
     actions: updateActions,
   };
 
-  const answer = sendActions(body, userToken.access_token);
+  const answer = sendActions(body, userToken.thing!.access_token);
 
   return answer;
 }

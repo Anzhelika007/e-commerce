@@ -37,6 +37,7 @@
 
 .fieldset .input-wrapper-address {
   margin: 0;
+  margin: 5px 10px;
 }
 
 .profile-fieldset {
@@ -132,6 +133,47 @@
 .address-list-table-head-line-field {
   width: 1%;
   border-bottom: 1px solid #d0d0d0;
+}
+
+@media (max-width: 1000px) {
+  .form__profile .input-wrapper-line {
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 3rem;
+  }
+}
+
+.input-wrapper-line {
+  flex-wrap: wrap;
+}
+.registration-address {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  @media (max-width: 800px) {
+    justify-content: center;
+    gap: unset;
+  }
+}
+
+.input-wrapper-line-edit-address {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  position: relative;
+  flex-wrap: wrap;
+}
+.input-wrapper-address-edit {
+  margin: 5px 10px;
+  // margin-bottom: 20px;
+  height: 70px;
+  position: relative;
+  max-width: 16em;
+  line-height: 20px;
 }
 // .address-list-table-body {
 

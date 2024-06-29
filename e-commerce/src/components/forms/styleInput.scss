@@ -198,7 +198,7 @@ label {
     max-width: 150px;
   }
 }
-.registration-adress {
+.registration-address {
   display: flex;
   & > input-error {
     position: absolute;
@@ -232,11 +232,15 @@ label {
 /* Input Search */
 .search-label {
   position: relative;
+  @media (max-width: 770px) {
+    align-self: flex-start;
+    padding: 0 7px;
+  }
 }
 .search-input {
   border: 1px solid $Light-grey;
   border-radius: 3px;
-  width: 250px;
+  width: 230px;
   padding-left: 10px;
   &:focus-visible,
   &:active {
@@ -248,13 +252,33 @@ label {
   @include btnBlue;
   position: absolute;
   top: 0;
-  right: 0;
+  right: -50px;
   height: 100%;
   width: 70px;
   font-size: 1.5rem;
   border-radius: 3px;
   &:hover {
     background-color: #0056b3;
+  }
+}
+
+.clear-btn {
+  position: absolute;
+  top: 0;
+  right: 20px;
+  height: 100%;
+  width: 20px;
+  font-size: 1.5rem;
+  border-radius: 3px;
+  background: inherit;
+  border: none;
+  cursor: pointer;
+  &:hover {
+    background-color: $Grey-dark-pagination;
+  }
+  &:disabled {
+    background-color: inherit;
+    color: $White;
   }
 }
 

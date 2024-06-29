@@ -6,7 +6,7 @@ import {
   ValidationAddressType,
 } from './editAddressValidation';
 import { useAppDispatch } from '../../../redux/hooks';
-import { setUserLogged, Address } from '../../../redux/store/userSlice';
+import { Address } from '../../../redux/store/userSlice';
 import { getCustomerInfo } from '../../../services/api/getCustomerInfo';
 import Input from '../elements/input';
 import Country from '../elements/country';
@@ -48,9 +48,9 @@ export function EditAddress({ addressID, closeModal, showToast }: Props) {
 
   useEffect(() => {
     const getUserInfo = async () => {
-      const userInfo = await getCustomerInfo();
-      if (!userInfo) return;
-      const userAddresses = extractAddressesFromUser(userInfo).addresses;
+      const userInfo = await getCustomerInfo(dispatch);
+      if (userInfo.isError) return;
+      const userAddresses = extractAddressesFromUser(userInfo.thing!).addresses;
       if (!userAddresses) return;
       if (userAddresses.length === 0) return;
       const address = userAddresses.find((addr) => addr.id === addressID);
@@ -58,7 +58,7 @@ export function EditAddress({ addressID, closeModal, showToast }: Props) {
       reset({ address });
     };
     if (addressID) getUserInfo();
-  }, [reset, addressID]);
+  }, [reset, addressID, dispatch]);
 
   // Disable button submit
   useEffect(() => {
@@ -75,10 +75,7 @@ export function EditAddress({ addressID, closeModal, showToast }: Props) {
         closeModal();
         return;
       }
-      const userInfo = await getCustomerInfo(true);
-      if (userInfo) {
-        dispatch(setUserLogged(userInfo));
-      }
+      await getCustomerInfo(dispatch, true);
       newAddressId = result.addresses[result.addresses.length - 1].id;
     }
     const newAddress: Address = { ...data.address };
@@ -90,10 +87,7 @@ export function EditAddress({ addressID, closeModal, showToast }: Props) {
       closeModal();
       return;
     }
-    const userInfo = await getCustomerInfo(true);
-    if (userInfo) {
-      dispatch(setUserLogged(userInfo));
-    }
+    await getCustomerInfo(dispatch, true);
     showToast({
       message: 'Changes saved',
       thisError: false,
@@ -109,7 +103,7 @@ export function EditAddress({ addressID, closeModal, showToast }: Props) {
         <legend>Address</legend>
       </div>
       <form className="form__profile form" onSubmit={handleSubmit(onSubmit)}>
-        <div className="input-wrapper-line">
+        <div className="input-wrapper-line-edit-address">
           <CheckBox
             id="addressForShipping"
             title="Use as shipping"
@@ -121,7 +115,7 @@ export function EditAddress({ addressID, closeModal, showToast }: Props) {
             registerObject={register('address.shippingDefault')}
           />
         </div>
-        <div className="input-wrapper-line">
+        <div className="input-wrapper-line-edit-address">
           <CheckBox
             id="addressForBilling"
             title="Use as billing"
@@ -134,33 +128,33 @@ export function EditAddress({ addressID, closeModal, showToast }: Props) {
           />
         </div>
 
-        <div className="input-wrapper-line">
-          <div className="registration-adress">
+        <div className="input-wrapper-line-edit-address">
+          <div className="registration-address">
             <Input
               id="streetName"
-              classNameComponent="input-wrapper-address"
+              classNameComponent="input-wrapper-address-edit"
               title="Street"
-              isRequared
-              className="form__profile-adress input-text"
+              isRequired
+              className="form__profile-address input-text"
               errorMessage={errors.address?.streetName?.message}
               registerObject={register('address.streetName')}
             />
 
             <Input
               id="city"
-              classNameComponent="input-wrapper-address"
+              classNameComponent="input-wrapper-address-edit"
               title="City"
-              isRequared
-              className="form__profile-adress input-text"
+              isRequired
+              className="form__profile-address input-text"
               errorMessage={errors.address?.city?.message}
               registerObject={register('address.city')}
             />
 
             <Country
               id="country"
-              classNameComponent="input-wrapper-address"
-              isRequared
-              className="form__profile-adress input-text"
+              classNameComponent="input-wrapper-address-edit"
+              isRequired
+              className="form__profile-address input-text"
               errorMessage={errors.address?.country?.message}
               registerObject={register('address.country')}
               onChangeHandler={() =>
@@ -173,10 +167,10 @@ export function EditAddress({ addressID, closeModal, showToast }: Props) {
 
             <Input
               id="postalCode"
-              classNameComponent="input-wrapper-address"
+              classNameComponent="input-wrapper-address-edit"
               title="POST Code"
-              isRequared
-              className="form__profile-adress input-text"
+              isRequired
+              className="form__profile-address input-text"
               errorMessage={errors.address?.postalCode?.message}
               registerObject={register('address.postalCode')}
             />

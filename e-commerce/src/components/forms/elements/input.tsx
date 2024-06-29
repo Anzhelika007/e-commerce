@@ -7,7 +7,7 @@ type Props = {
   inputType?: 'text' | 'date' | 'password';
   title: string;
   placeholder?: string;
-  isRequared: boolean;
+  isRequired: boolean;
   className?: string;
   errorMessage?: string;
   style?: CSSProperties;
@@ -22,7 +22,7 @@ function Input({
   inputType = 'text',
   title,
   placeholder,
-  isRequared,
+  isRequired,
   className = 'input-text',
   errorMessage,
   style,
@@ -34,7 +34,7 @@ function Input({
     <div className={classNameComponent}>
       <label htmlFor={id}>
         {title}
-        {isRequared && '*'}
+        {isRequired && '*'}
         <input
           id={id}
           disabled={disabled}

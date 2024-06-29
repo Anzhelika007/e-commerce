@@ -16,6 +16,6 @@ describe('render About page', () => {
       </Provider>
     );
 
-    expect(screen.queryByText('About')).toBeInTheDocument();
+    expect(screen.queryByText('About Us')).toBeInTheDocument();
   });
 });

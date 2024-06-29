@@ -20,7 +20,7 @@ describe('render', () => {
       </Provider>
     );
 
-    expect(screen.queryByText('Back call')).toBeInTheDocument();
+    expect(screen.queryByAltText('logo')).toBeInTheDocument();
   });
 });
 
@@ -35,6 +35,6 @@ describe('App component', () => {
       </Provider>
     );
 
-    expect(screen.getByText('Our phones')).toBeInTheDocument();
+    expect(screen.queryByAltText('logoFooter')).toBeInTheDocument();
   });
 });

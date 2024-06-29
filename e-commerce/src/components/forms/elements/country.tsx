@@ -4,7 +4,7 @@ import { UseFormRegisterReturn } from 'react-hook-form';
 type Props = {
   id: string;
   classNameComponent?: string;
-  isRequared: boolean;
+  isRequired: boolean;
   className?: string;
   errorMessage?: string;
   style?: CSSProperties;
@@ -15,7 +15,7 @@ type Props = {
 function Country({
   id,
   classNameComponent,
-  isRequared,
+  isRequired,
   className = 'input-text',
   errorMessage,
   style,
@@ -25,7 +25,7 @@ function Country({
   return (
     <div className={classNameComponent}>
       <label htmlFor={id}>
-        Country{isRequared && '*'}
+        Country{isRequired && '*'}
         <select
           id={id}
           className={`${className} ${

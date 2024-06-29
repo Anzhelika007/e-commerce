@@ -3,3 +3,321 @@
   display: flex;
   flex-direction: column;
 }
+.basket-catalog {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  &-title {
+    margin-bottom: 10px;
+  }
+}
+.basket-catalog-wrapper {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 40px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  justify-content: space-around;
+  min-height: 50vh;
+  @media (max-width: 660px) {
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+}
+.basket-catalog-total-price {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0;
+}
+.basket-catalog-total-price-current {
+  display: contents;
+  font-size: 3rem;
+  font-style: normal;
+  font-weight: 600;
+  color: #222222;
+}
+.basket-price-total-old {
+  font-size: 2.5rem;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 1.8rem;
+  color: #a4a4a4;
+  text-decoration: line-through;
+  text-align: right;
+}
+.basket-discount-code {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-weight: 800;
+}
+.basket-discount-code-header {
+  display: flex;
+  flex-direction: row;
+}
+.basket-discount-codes {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.discount-code-clear-btn {
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 2.6rem;
+  color: #fff;
+  background: #4295e4;
+  border: none;
+  cursor: pointer;
+  width: 70px;
+  font-size: 1.5rem;
+  border-radius: 3px;
+  margin-left: 14px;
+}
+.discount-code-clear-btn:hover {
+  background-color: #0056b3;
+}
+.discount-code-input {
+  border: 1px solid #c4cdd5;
+  border-radius: 3px;
+  width: 200px;
+  padding-left: 10px;
+}
+.catalog-products {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: flex-start;
+  width: 100%;
+}
+.catalog-product {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: space-evenly;
+}
+.basket-card {
+  width: 250px;
+  height: 426px;
+  border: 1px solid #eaeaea;
+  border-radius: 5px;
+  @media (min-width: 660px) {
+    display: flex;
+    width: 80%;
+    height: 240px;
+    border: 1px solid #eaeaea;
+    border-radius: 5px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+}
+.basket-card__header {
+  position: absolute;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  width: inherit;
+  z-index: 2;
+}
+.basket-card__img {
+  padding: 0;
+  background-size: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 240px;
+  height: 240px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: flex-start;
+  margin: 0 auto;
+  cursor: pointer;
+  max-width: 200px;
+  @media (min-width: 660px) {
+    margin: 0;
+  }
+}
+.basket-card__info {
+  @media (min-width: 660px) {
+    display: flex;
+    padding: 12px 10px 10px;
+    background: #fff;
+    border-top: 1px solid #eaeaea;
+    border-radius: 5px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+.basket-card__info-title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+.basket-card__info-title-name {
+  font-weight: bold;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -moz-box;
+  display: -webkit-box;
+  line-clamp: 1;
+  box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-align: left;
+  line-height: normal;
+}
+.basket-card__info-description {
+  font-size: 1.3rem;
+  line-height: 1.5rem;
+  margin-bottom: 10px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -moz-box;
+  display: -webkit-box;
+  line-clamp: 2;
+  box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+.basket-price-new {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 1.8rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 2.4rem;
+  padding-right: 12px;
+  background: inherit;
+  gap: 8px;
+  @media (min-width: 660px) {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0;
+  }
+}
+.basket-price-sum {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  font-size: 1.8rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 2.4rem;
+  padding-right: 12px;
+  background: inherit;
+}
+.basket-price-old {
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 1.8rem;
+  color: #a4a4a4;
+  text-decoration: line-through;
+  padding-right: 12px;
+  text-align: left;
+}
+.basket-price-full-old {
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 1.8rem;
+  color: #a4a4a4;
+  text-decoration: line-through;
+  text-align: right;
+}
+.basket-card__info-quantity {
+  margin: 3px 0;
+  font-weight: bold;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @media (min-width: 660px) {
+    margin: 0;
+    font-weight: bold;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+}
+.basket-card_buttons {
+  display: flex;
+  gap: 4px;
+  margin: 0 10px;
+}
+.basket-card-btn {
+  color: #fff;
+  background: #4295e4;
+  width: 20px;
+  height: 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 1.3rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 2rem;
+}
+.basket-card-btn-remove {
+  width: 40px;
+  height: 40px;
+  font-size: 1.8rem;
+}
+
+.basket-catalog-clear-button {
+  position: absolute;
+  align-self: self-end;
+  top: 10px;
+  @media (max-width: 660px) {
+    position: relative;
+  }
+}
+.basket-catalog-buttons {
+  color: #fff;
+  background: #4295e4;
+  width: max-content;
+  height: max-content;
+  border: none;
+  cursor: pointer;
+  font-size: 1.8rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 2rem;
+  padding: 10px;
+}
+.basket-catalog-button:hover:not(:disabled) {
+  scale: 1.1;
+}
+
+.basket-catalog-empty {
+  font-size: 3rem;
+  line-height: 4rem;
+}
+.basket-catalog-empty-link {
+  color: #4295e4;
+}
+.basket-catalog-empty-link-text {
+  position: relative;
+  text-shadow: 0 0 12px #57a304;
+}
+.basket-catalog-empty-link-text:hover {
+  text-shadow: 0 0 12px #cc244e;
+}
+
+// button[disabled='disabled']:hover {
+//   scale: 1;
+// }

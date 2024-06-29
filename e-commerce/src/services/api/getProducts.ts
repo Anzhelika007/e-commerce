@@ -1,25 +1,27 @@
-import { getAccessToken } from './getCustomerToken';
+import { getAppToken } from './getAppToken';
 import {
   IFilter,
   IProductResponseCategory,
+  IProductResponse,
+  IProductPage,
 } from '../../types/Product/InterfaceProduct';
 import { ICategoriesResponse } from '../../types/Product/InterfaceCategories';
-import { converterDigit } from '../../pages/catalog/formattedData';
+import {
+  converterDigit,
+  formattedDataForFilter,
+} from '../../pages/catalog/formattedData';
+import { checkProductInCartById } from './cart';
 
 const urlProject = `${import.meta.env.VITE_CTP_API_URL}/${import.meta.env.VITE_CTP_PROJECT_KEY}`;
-export enum SortField {
-  PriceAsc = 'priceAsc',
-  PriceDesc = 'priceDesc',
-  CreatedAt = 'createdAtDesc',
-  NameAsc = 'nameAsc',
-  NameDesc = 'nameDesc',
-  Default = 'createdAtAsc',
-}
+const urlProductSearch = `${urlProject}/product-projections/search?`;
+const limitProduct = '8';
 
 // Header for all request
 async function requestOptions(): Promise<RequestInit> {
   const myHeaders = new Headers();
-  const appToken = await getAccessToken().then((result) => result.access_token);
+  const appToken = await getAppToken().then(
+    (result) => result.thing?.access_token
+  );
   myHeaders.append('Authorization', `Bearer ${appToken}`);
 
   const options: RequestInit = {
@@ -33,10 +35,13 @@ export async function getProduct(id: string) {
   const options = await requestOptions();
   const url = `${urlProject}/products/${id}`;
 
-  const answer = await fetch(url, options);
-  const result = await answer.json();
+  const oneProductData: IProductPage = await fetch(url, options).then(
+    (response) => response.json()
+  );
+  const getLineId: string = checkProductInCartById(id);
+  const checkInBasket: boolean = getLineId !== '';
 
-  return result;
+  return { oneProductData, checkInBasket, getLineId };
 }
 
 export async function getCategories(): Promise<ICategoriesResponse> {
@@ -51,29 +56,20 @@ export async function getCategories(): Promise<ICategoriesResponse> {
 
 export async function getProductsSorted(
   categoryId: string,
-  sortFieldKey: SortField = SortField.Default
+  offset: number,
+  sortFieldKey: string = 'createdAt asc'
 ): Promise<IProductResponseCategory> {
   const options = await requestOptions();
 
-  const sortFieldOptional: Record<SortField, string> = {
-    [SortField.PriceAsc]: 'price asc',
-    [SortField.PriceDesc]: 'price desc',
-    [SortField.CreatedAt]: 'createdAt desc',
-    [SortField.NameAsc]: 'name.en asc',
-    [SortField.NameDesc]: 'name.en desc',
-    [SortField.Default]: 'createdAt asc',
-  };
-  const sortFieldGet = sortFieldOptional[sortFieldKey];
-
-  const url = new URL(
-    `${import.meta.env.VITE_CTP_API_URL}/${import.meta.env.VITE_CTP_PROJECT_KEY}/product-projections/search?`
-  );
+  const url = new URL(urlProductSearch);
   const filterCategory = categoryId
     ? `categories.id:"${categoryId}"`
     : `categories:exists`;
   url.searchParams.append('filter', filterCategory);
-  url.searchParams.append('sort', sortFieldGet);
+  url.searchParams.append('sort', sortFieldKey);
   url.searchParams.append('priceCurrency', 'USD');
+  url.searchParams.append('limit', limitProduct);
+  url.searchParams.append('offset', `${offset}`);
 
   const answer = await fetch(url.toString(), options);
 
@@ -81,11 +77,20 @@ export async function getProductsSorted(
   return categoryProducts;
 }
 
-export async function searchProducts(value: string) {
+export async function searchProducts(
+  value: string,
+  offset: number,
+  sortFieldKey: string = 'createdAt asc'
+) {
   const options = await requestOptions();
   const language = 'en';
   const fuzzy = true;
-  const url = `${urlProject}/product-projections/search?text.${language}=${value}&fuzzy=${fuzzy}`;
+  const url = new URL(urlProductSearch);
+  url.searchParams.append(`text.${language}`, `"${value}"`);
+  url.searchParams.append('fuzzy', `${fuzzy}`);
+  url.searchParams.append('limit', limitProduct);
+  url.searchParams.append('offset', `${offset}`);
+  url.searchParams.append('sort', sortFieldKey);
 
   const answer = await fetch(url, options);
   const result = await answer.json();
@@ -94,75 +99,23 @@ export async function searchProducts(value: string) {
 }
 
 export async function filterProductsInfo() {
-  let fractionDigits = 0;
-  const sortParamPriceMin = 'price asc';
-  const sortParamPriceMax = 'price desc';
-  const priceArr: number[] = [];
-  const color: string[] = [];
-  const model: string[] = [];
-
   const options = await requestOptions();
+  const url = `${urlProject}/products?limit=100`;
 
-  const urlMinPrice = new URL(
-    `${urlProject}/product-projections/search?price desc`
-  );
-  urlMinPrice.searchParams.append('sort', sortParamPriceMin);
+  const requestData = await fetch(url, options);
+  const responseData: IProductResponse = await requestData.json();
 
-  const answerMinPrice = await fetch(urlMinPrice, options);
-  const resultMinPrice: IProductResponseCategory = await answerMinPrice.json();
-
-  const urlMaxPrice = new URL(
-    `${urlProject}/product-projections/search?price desc`
-  );
-  urlMaxPrice.searchParams.append('sort', sortParamPriceMax);
-
-  const answerMaxPrice = await fetch(urlMaxPrice, options);
-  const resultMaxPrice: IProductResponseCategory = await answerMaxPrice.json();
-
-  const result = resultMinPrice.results.concat(resultMaxPrice.results);
-
-  result.forEach((product) => {
-    const productPrice = product.masterVariant.prices[0].value.centAmount;
-    fractionDigits = product.masterVariant.prices[0].value.fractionDigits;
-    const price = productPrice / converterDigit(fractionDigits);
-    priceArr.push(price);
-
-    if (product.masterVariant.attributes[1]?.value) {
-      // console.log('color', product.variants)
-      const productColor = product.masterVariant.attributes[1].value;
-      if (!color.includes(productColor)) {
-        color.push(productColor);
-        color.sort();
-      }
-    }
-
-    if (product.masterVariant.attributes[2]?.value) {
-      const productModel = product.masterVariant.attributes[2].value;
-      if (!model.includes(productModel)) {
-        model.push(productModel);
-        model.sort();
-      }
-    }
-  });
-  const priceMin: number = Math.min(...priceArr);
-  const priceMax: number = Math.max(...priceArr);
-
-  const filterProps: IFilter = {
-    priceMax,
-    priceMin,
-    color,
-    model,
-    fractionDigits,
-  };
-
+  const filterProps: IFilter = formattedDataForFilter(responseData.results);
   return filterProps;
 }
 
-export async function filterProducts(data: IFilter) {
+export async function filterProducts(
+  data: IFilter,
+  offset: number,
+  sort: string
+) {
   const options = await requestOptions();
-  const url = new URL(
-    `${import.meta.env.VITE_CTP_API_URL}/${import.meta.env.VITE_CTP_PROJECT_KEY}/product-projections/search?`
-  );
+  const url = new URL(urlProductSearch);
   if (data.color.length > 0) {
     const param = data.color.map((elem) => `"${elem}"`).join(', ');
     url.searchParams.append('filter', `variants.attributes.color: ${param}`);
@@ -178,7 +131,13 @@ export async function filterProducts(data: IFilter) {
     const filterPrice = `variants.price.centAmount:range (${minPrice} to ${maxPrice})`;
     url.searchParams.append('filter', filterPrice);
   }
+
+  url.searchParams.append('sort', sort);
+  url.searchParams.append('offset', `${offset}`);
+  url.searchParams.append('limit', limitProduct);
+
   const answer = await fetch(url, options);
   const result: IProductResponseCategory = await answer.json();
+
   return result;
 }

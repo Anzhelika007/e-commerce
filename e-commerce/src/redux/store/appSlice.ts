@@ -12,13 +12,15 @@ type AppState = {
   authToken: AppToken;
 };
 
+const initialToken: AppToken = {
+  access_token: '',
+  token_type: '',
+  expires_in: 0,
+  scope: '',
+};
+
 const initialState: AppState = {
-  authToken: {
-    access_token: '',
-    token_type: '',
-    expires_in: 0,
-    scope: '',
-  },
+  authToken: { ...initialToken },
 };
 
 const appSlice = createSlice({

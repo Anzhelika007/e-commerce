@@ -10,7 +10,7 @@ import { useAppDispatch } from '../../../redux/hooks';
 import Input from '../elements/input';
 import ButtonClose from '../elements/buttonClose';
 import store from '../../../redux/store/store';
-import { setUserLogged, setAuthToken } from '../../../redux/store/userSlice';
+import { setAuthToken } from '../../../redux/store/userSlice';
 import {
   ChangeUserMainData,
   changeUserMainData,
@@ -46,17 +46,20 @@ function UserMainData({ closeModal, showToast }: Props) {
 
   useEffect(() => {
     const getUserInfo = async () => {
-      const userInfo = await getCustomerInfo();
+      const userInfo = await getCustomerInfo(dispatch);
+      const dateParts = userInfo.thing!.dateOfBirth as unknown as Date;
+      // console.log(dateParts);
+      // const dateOfBirth = new Date(`${dateParts[0]}-${dateParts[1]}-${dateParts[2]}`);
       const defaultValues: ChangeUserMainData = {
-        firstName: userInfo.firstName,
-        lastName: userInfo.lastName,
-        dateOfBirth: userInfo.dateOfBirth,
-        email: userInfo.email,
+        firstName: userInfo.thing!.firstName,
+        lastName: userInfo.thing!.lastName,
+        dateOfBirth: dateParts,
+        email: userInfo.thing!.email,
       };
       reset({ ...defaultValues });
     };
     getUserInfo();
-  }, [reset]);
+  }, [reset, dispatch]);
 
   // Disable button submit
   useEffect(() => {
@@ -72,10 +75,7 @@ function UserMainData({ closeModal, showToast }: Props) {
       const token = { ...store.getState().userSlice.authToken };
       token.email = data.email;
       dispatch(setAuthToken(token));
-      const userInfo = await getCustomerInfo(true);
-      if (userInfo) {
-        dispatch(setUserLogged(userInfo));
-      }
+      await getCustomerInfo(dispatch, true);
       showToast({
         message: 'Changes saved',
         thisError: false,
@@ -95,7 +95,7 @@ function UserMainData({ closeModal, showToast }: Props) {
           <Input
             id="firstName"
             title="first Name"
-            isRequared
+            isRequired
             errorMessage={errors.firstName?.message}
             registerObject={register('firstName')}
           />
@@ -103,7 +103,7 @@ function UserMainData({ closeModal, showToast }: Props) {
           <Input
             id="lastName"
             title="last Name"
-            isRequared
+            isRequired
             errorMessage={errors.lastName?.message}
             registerObject={register('lastName')}
           />
@@ -112,7 +112,7 @@ function UserMainData({ closeModal, showToast }: Props) {
             id="dateOfBirth"
             inputType="date"
             title="Date of Birth"
-            isRequared
+            isRequired
             errorMessage={errors.dateOfBirth?.message}
             registerObject={register('dateOfBirth')}
           />
@@ -123,7 +123,7 @@ function UserMainData({ closeModal, showToast }: Props) {
             id="email"
             classNameComponent="input-wrapper"
             title="Email"
-            isRequared
+            isRequired
             className="form__profile-email input-text"
             errorMessage={errors.email?.message}
             registerObject={register('email')}

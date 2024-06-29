@@ -10,6 +10,7 @@
     display: flex;
     justify-content: center;
     gap: 82px;
+    flex-wrap: wrap;
   }
   &__box-item {
     display: flex;
@@ -26,7 +27,7 @@
   }
 }
 .we {
-  padding-top: 93px;
+  padding: 93px 0 50px;
   display: flex;
   flex-direction: column;
   gap: 56px;
@@ -36,7 +37,9 @@
   }
   &__reason {
     display: flex;
-    gap: 30px;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
   &__reason-item {
     padding: 24px;
@@ -45,6 +48,7 @@
     align-items: center;
     gap: 32px;
     box-shadow: $B-shadow-service;
+    max-width: 350px;
   }
   &__reason-img {
     width: 82px;
@@ -71,10 +75,12 @@
     display: flex;
     flex-wrap: wrap;
     gap: 40px;
+    justify-content: center;
   }
 
   &-btn {
     @include btnBlue();
+    margin-bottom: 40px;
   }
 }
 .popular-products {
@@ -97,5 +103,30 @@
   }
   &-text {
     text-align: center;
+  }
+}
+.home-discounts {
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  &-title {
+    font-weight: 800;
+    font-size: 2rem;
+  }
+  &-code {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    &-code {
+      text-align: end;
+      margin-right: 8px;
+      color: crimson;
+      font-weight: 600;
+    }
+    &-description {
+      text-align: start;
+      margin-left: 8px;
+    }
   }
 }

@@ -58,7 +58,7 @@ h5 {
 .container {
   max-width: $width-desktop;
   width: 90vw;
-  padding: 0;
+  padding: 0 10px;
   margin: 0 auto;
   box-sizing: border-box;
 
@@ -80,10 +80,31 @@ h5 {
 button[disabled='disabled'],
 button:disabled {
   background-color: $Grey-dark-pagination;
-  cursor: none;
+  cursor: unset;
 }
 .none {
   display: none;
+}
+.no-scroll {
+  overflow: hidden;
+}
+
+// Scroll bar
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: $Stroke;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $Light-grey;
+  border-radius: 1rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: $Grey-primary; /* Slightly darker gray on hover */
 }
 
 @media (max-width: 1200px) {
@@ -99,25 +120,3 @@ button:disabled {
   align-items: center;
   margin: 0 auto;
 }
-
-@media (max-width: 700px) {
-  //   body {
-  //   @include font($size: 1.6rem, $height: 150%, $weight: 400);
-  //   }
-  //   h1{
-  //     @include font($size: 4.2rem, $height: 115%, $weight: 600, $style: normal);
-  //     color: $beige-light;
-  //   }
-  //   h2{
-  //     @include font($size: 3.2rem, $height:125%, $weight: 600, $style: normal);
-  //   }
-  // .container{
-  //   padding: 0 16px;
-  // }
-}
-
-/* fix content */
-// .free-page {
-//   text-align: center;
-//   line-height: 60vh;
-// }

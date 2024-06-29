@@ -2,6 +2,8 @@ import {
   IProductResponseCategory,
   Image,
   IProductPage,
+  IProduct,
+  IFilter,
 } from '../../types/Product/InterfaceProduct';
 import { ProductCardProps } from '../../components/productCard/productCard';
 import { ICategoriesResponse } from '../../types/Product/InterfaceCategories';
@@ -96,7 +98,10 @@ export function formattedDataForCardInCategory(
   return productsAllGet;
 }
 
-export function formattedDataForOneProduct(data: IProductPage) {
+export function formattedDataForOneProduct(
+  data: IProductPage,
+  inBasket: boolean
+) {
   const imageUrl: string[] = [];
   data.masterData.staged.masterVariant.images.forEach((url: Image) => {
     imageUrl.push(url.url);
@@ -148,6 +153,54 @@ export function formattedDataForOneProduct(data: IProductPage) {
     size,
     color,
     model,
+    inBasket,
   };
   return propsProductProps;
+}
+
+export function formattedDataForFilter(data: IProduct[]) {
+  let fractionDigits = 0;
+  const priceArr: number[] = [];
+  const color: string[] = [];
+  const model: string[] = [];
+
+  data.forEach((product) => {
+    const productPrice =
+      product.masterData.current.masterVariant.prices[0].value.centAmount;
+    fractionDigits =
+      product.masterData.current.masterVariant.prices[0].value.fractionDigits;
+    const price = productPrice / converterDigit(fractionDigits);
+    priceArr.push(price);
+
+    if (product.masterData.current.masterVariant.attributes[1]?.value) {
+      const productColor =
+        product.masterData.current.masterVariant.attributes[1].value;
+      if (!color.includes(productColor)) {
+        color.push(productColor);
+        color.sort();
+      }
+    }
+
+    if (product.masterData.current.masterVariant.attributes[2]?.value) {
+      const productModel =
+        product.masterData.current.masterVariant.attributes[2].value;
+      if (!model.includes(productModel)) {
+        model.push(productModel);
+        model.sort();
+      }
+    }
+  });
+
+  const priceMin: number = Math.min(...priceArr);
+  const priceMax: number = Math.max(...priceArr);
+
+  const filterProps: IFilter = {
+    priceMax,
+    priceMin,
+    color,
+    model,
+    fractionDigits,
+  };
+
+  return filterProps;
 }

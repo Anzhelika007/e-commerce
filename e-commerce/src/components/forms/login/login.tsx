@@ -8,12 +8,6 @@ import {
   placeholder,
 } from '../validationRulesInput';
 import { useAppDispatch } from '../../../redux/hooks';
-import {
-  setUserLogged,
-  User,
-  setAuthToken,
-  AuthToken,
-} from '../../../redux/store/userSlice';
 import { login } from '../../../services/api/login';
 import store from '../../../redux/store/store';
 import Input from '../elements/input';
@@ -23,21 +17,15 @@ import { getCustomerInfo } from '../../../services/api/getCustomerInfo';
 function LoginForm(): React.ReactElement {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
   useEffect(() => {
     const appTokenStore = store.getState().userSlice.authToken.access_token;
     if (appTokenStore.length > 0) {
       navigate(`/`);
     }
   });
-
-  const dispatch = useAppDispatch();
-  const setAuthUserToken = (tokenNew: AuthToken) => {
-    dispatch(setAuthToken(tokenNew));
-  };
-  const setUserLogIn = (userNew: User) => {
-    dispatch(setUserLogged(userNew));
-  };
 
   const {
     register,
@@ -54,9 +42,9 @@ function LoginForm(): React.ReactElement {
   }, [isValid, isDirty]);
 
   const onSubmit = async (data: FormDataLogin) => {
-    const tokenNew = await login(data);
+    const tokenNew = await login(data, dispatch);
 
-    if (tokenNew.statusCode) {
+    if (tokenNew.isError) {
       const { message } = tokenNew;
       const errorsBlock = document.getElementById('errorsAnswer');
       if (message && errorsBlock) {
@@ -66,11 +54,7 @@ function LoginForm(): React.ReactElement {
         }, 5000);
       }
     } else {
-      setAuthUserToken(tokenNew);
-      const userInfo = await getCustomerInfo();
-
-      if (userInfo) setUserLogIn(userInfo);
-
+      await getCustomerInfo(dispatch);
       navigate(`/`);
     }
     return data;
@@ -84,7 +68,7 @@ function LoginForm(): React.ReactElement {
         id="email"
         classNameComponent="input-wrapper form__login-wrapper"
         title="Email"
-        isRequared
+        isRequired
         placeholder={placeholder.email}
         className="form__login-login input-text"
         errorMessage={errors.email?.message}
@@ -95,7 +79,7 @@ function LoginForm(): React.ReactElement {
         id="password"
         classNameComponent="input-wrapper form__login-wrapper"
         title="Password"
-        isRequared
+        isRequired
         className="form__registration-password input-text"
         classNameButton="btn-submit btn-show"
         errorMessage={errors.password?.message}

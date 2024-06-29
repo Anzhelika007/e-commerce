@@ -4,9 +4,12 @@ import {
   IRegisterSend,
 } from '../../types/User/Interface';
 import { FormDataRegister } from '../../components/forms/validationRulesInput';
-import { getAppToken } from './getAppToken';
+import { AppMessage, getAppToken } from './getAppToken';
+import { AppDispatch } from '../../redux/store/store';
+import { User, setUserLogged } from '../../redux/store/userSlice';
+import { login } from './login';
 
-export async function register(customer: object, token: string) {
+async function register(customer: object, token: string) {
   const answer = await fetch(
     `${import.meta.env.VITE_CTP_API_URL}/${import.meta.env.VITE_CTP_PROJECT_KEY}/me/signup`,
     {
@@ -17,16 +20,29 @@ export async function register(customer: object, token: string) {
       },
       body: JSON.stringify(customer),
     }
-  );
-  const answerJSON = await answer.json();
-  return answerJSON;
-}
-
-export async function registerNewCustomer(formData: IRegisterSend) {
-  const answer = getAppToken().then((result) =>
-    register(formData, result.access_token)
-  );
-
+  )
+    .then((NewUser) => NewUser.json())
+    .then((NewUser) => {
+      if (NewUser.errors) {
+        const result: AppMessage<undefined> = {
+          isError: true,
+          message: NewUser.message,
+        };
+        return result;
+      }
+      const result: AppMessage<User> = {
+        isError: false,
+        thing: NewUser.customer,
+      };
+      return result;
+    })
+    .catch((reason: Error) => {
+      const result: AppMessage<undefined> = {
+        isError: true,
+        message: reason.message,
+      };
+      return result;
+    });
   return answer;
 }
 
@@ -75,4 +91,23 @@ export function formattedDataRegister(data: FormDataRegister): IRegisterSend {
     formData.defaultBillingAddress = data.addressForInvoice ? 0 : 1;
   }
   return formData;
+}
+
+export async function registerNewCustomer(
+  formData: FormDataRegister,
+  dispatch: AppDispatch
+) {
+  const appToken = await getAppToken(dispatch);
+  if (appToken.isError) return appToken;
+
+  const dataUser = formattedDataRegister(formData);
+  const newUser = await register(dataUser, appToken.thing!.access_token);
+  if (newUser.isError) return newUser;
+
+  const userToken = await login(formData, dispatch);
+  if (userToken.isError) return userToken;
+
+  if (newUser.thing) dispatch(setUserLogged(newUser.thing));
+
+  return newUser;
 }

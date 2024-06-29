@@ -6,7 +6,7 @@ type Props = {
   classNameComponent?: string;
   title: string;
   placeholder?: string;
-  isRequared?: boolean;
+  isRequired?: boolean;
   className?: string;
   classNameButton?: string;
   errorMessage?: string;
@@ -20,7 +20,7 @@ function Password({
   classNameComponent = 'input-wrapper',
   title,
   placeholder,
-  isRequared,
+  isRequired,
   className = 'input-text',
   classNameButton = 'btn-show',
   errorMessage,
@@ -35,7 +35,7 @@ function Password({
       <label htmlFor={id}>
         {title}
         {after}
-        {isRequared && '*'}
+        {isRequired && '*'}
         <input
           id={id}
           type={showPassword ? 'text' : 'password'}
@@ -44,6 +44,7 @@ function Password({
             errorMessage ? 'error-background-input' : ''
           }`}
           style={style}
+          autoComplete="on"
           {...registerObject}
         />
       </label>

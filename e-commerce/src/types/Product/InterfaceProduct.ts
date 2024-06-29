@@ -96,7 +96,7 @@ interface TaxCategory {
     id: string;
   };
 }
-interface Product {
+export interface IProduct {
   id: string;
   version: number;
   versionModifiedAt: string;
@@ -118,7 +118,7 @@ export interface IProductResponse {
   offset: number;
   count: number;
   total: number;
-  results: Product[];
+  results: IProduct[];
 }
 // Category Interface
 interface ProductCategoryProducts {
@@ -157,6 +157,7 @@ export interface IProductResponseCategory {
   facets: object;
   limit: number;
   offset: number;
+  total: number;
   results: ProductCategoryProducts[];
 }
 

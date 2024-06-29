@@ -1,9 +1,11 @@
-import './product.scss';
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { getProduct } from '../../services/api/getProducts';
-import { IProductPage } from '../../types/Product/InterfaceProduct';
 import { ProductCardProps } from '../../components/productCard/productCard';
 import { formattedDataForOneProduct } from '../catalog/formattedData';
+import { addLineToCart, removeLineFromCart } from '../../services/api/cart';
+import { useAppDispatch } from '../../redux/hooks';
 import Spinner from '../../components/spinner/Spinner';
 import ProductSlider from '../../components/slider/slider';
 
@@ -20,12 +22,34 @@ function Product() {
     size: '',
     color: '',
     model: '',
+    inBasket: false,
   };
+
+  const dispatch = useAppDispatch();
+  const message = {
+    addItem: 'Product added to cart',
+    removeItem: 'Product removed from cart',
+    error: 'Something went wrong',
+  };
+
+  const showMessage = (messageShow: string) => {
+    if (messageShow === message.addItem) {
+      toast.success(messageShow);
+    } else if (messageShow === message.removeItem) {
+      toast.success(messageShow);
+    } else {
+      toast.error(message.error);
+    }
+  };
+
+  const navigate = useNavigate();
 
   const [productProps, setProductProps] =
     useState<ProductCardProps>(productData);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [inBasket, setInBasket] = useState<boolean>(false);
+  const [lineId, setLineId] = useState<string>('');
 
   useEffect(() => {
     const startLocation = window.location.href;
@@ -33,9 +57,14 @@ function Product() {
     const idProduct: string = cutLink[cutLink.length - 1];
     const productInfo = async () => {
       try {
-        const oneProduct: IProductPage = await getProduct(idProduct);
-        const oneProductProps: ProductCardProps =
-          formattedDataForOneProduct(oneProduct);
+        const { oneProductData, checkInBasket, getLineId } =
+          await getProduct(idProduct);
+        setInBasket(checkInBasket);
+        setLineId(getLineId);
+        const oneProductProps: ProductCardProps = formattedDataForOneProduct(
+          oneProductData,
+          inBasket
+        );
         setProductProps(oneProductProps);
       } catch {
         setError('Failed to fetch products. Please try again later.');
@@ -44,7 +73,27 @@ function Product() {
       }
     };
     productInfo();
-  }, []);
+  }, [inBasket]);
+
+  const handleBtnAddToCart = async (productId: string, messageShow: string) => {
+    const answer = await addLineToCart(dispatch, productId);
+    if (!answer.isError) {
+      setInBasket(true);
+      showMessage(messageShow);
+    } else {
+      showMessage(message.error);
+    }
+  };
+
+  const handleBtnRemoveToCart = async (messageShow: string) => {
+    const answer = await removeLineFromCart(dispatch, lineId);
+    if (!answer.isError) {
+      setInBasket(false);
+      showMessage(messageShow);
+    } else {
+      showMessage(message.error);
+    }
+  };
 
   if (loading) {
     return <Spinner />;
@@ -62,6 +111,13 @@ function Product() {
   return (
     <section className="product">
       <h2 className="product free-page">Product</h2>
+      <button
+        type="button"
+        className="form__call-btn goBack-btn"
+        onClick={() => navigate(-1)}
+      >
+        Go Back
+      </button>
       <div className="product-wrapper">
         <div className="product__img-box">
           <ProductSlider images={productImages} />
@@ -73,7 +129,6 @@ function Product() {
           </div>
           <div className="product__info-price">
             <span>
-              {' '}
               <b>Price: </b>
               <b>
                 <em>
@@ -88,6 +143,30 @@ function Product() {
                 {productProps.oldPrice}
               </span>
             )}
+          </div>
+          <div className="product-btn">
+            <button
+              type="button"
+              className="basketAddItem-btn"
+              disabled={inBasket}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleBtnAddToCart(productProps.id, message.addItem);
+              }}
+            >
+              Add to cart
+            </button>
+            <button
+              type="button"
+              className="basketRemoveItem-btn"
+              disabled={!inBasket}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleBtnRemoveToCart(message.removeItem);
+              }}
+            >
+              Remove in the basket
+            </button>
           </div>
           {productProps.size && (
             <div className="label-in-stock">

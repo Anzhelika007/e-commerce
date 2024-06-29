@@ -1,5 +1,6 @@
-import store from '../../redux/store/store';
-import { getAppToken } from './getAppToken';
+import store, { AppDispatch } from '../../redux/store/store';
+import { User, setUserLogged } from '../../redux/store/userSlice';
+import { AppMessage, getAppToken } from './getAppToken';
 import { getUserToken } from './getUserToken';
 
 async function customerInfo(email: string, token: string) {
@@ -12,26 +13,68 @@ async function customerInfo(email: string, token: string) {
   const answer = await fetch(
     `${import.meta.env.VITE_CTP_API_URL}/${import.meta.env.VITE_CTP_PROJECT_KEY}/customers?limit=1&offset=0&where=${searchString}`,
     requestOptions
-  );
-  const answerJSON = await answer.json();
-  return answerJSON;
+  )
+    .then((data) => data.json())
+    .then((data) => {
+      if (data.errors || !data.total || data.results.length !== 1) {
+        const result: AppMessage<User> = {
+          isError: true,
+          message: data.message,
+        };
+        return result;
+      }
+      const result: AppMessage<User> = {
+        isError: false,
+        thing: data.results[0],
+      };
+      return result;
+    })
+    .catch((reason: Error) => {
+      const result: AppMessage<User> = {
+        isError: true,
+        message: reason.message,
+      };
+      return result;
+    });
+
+  return answer;
 }
 
-export async function getCustomerInfo(update = false) {
+export async function getCustomerInfo(dispatch?: AppDispatch, update = false) {
   const userInfo = store.getState().userSlice.user;
-  if (userInfo.email !== '' && !update) return userInfo;
+  if (userInfo.email !== '' && !update) {
+    const result: AppMessage<User> = {
+      isError: false,
+      thing: userInfo,
+    };
+    return result;
+  }
 
-  const appToken = await getAppToken();
-  if (!appToken) return undefined;
+  const appToken = await getAppToken(dispatch);
+  if (appToken.isError) {
+    const result: AppMessage<User> = {
+      isError: true,
+      message: appToken.message,
+    };
+    return result;
+  }
+
   const userToken = await getUserToken();
-  if (!userToken) return undefined;
-  const result = await customerInfo(
-    userToken.email.toLowerCase(),
-    appToken.access_token
-  );
-  if (!result.total || result.results.length !== 1) return undefined;
+  if (userToken.isError) {
+    const result: AppMessage<User> = {
+      isError: true,
+      message: userToken.message,
+    };
+    return result;
+  }
 
-  return result.results[0];
+  const result = await customerInfo(
+    userToken.thing!.email.toLowerCase(),
+    appToken.thing!.access_token
+  );
+  if (!result.isError && result.thing && dispatch)
+    dispatch(setUserLogged(result.thing));
+  return result;
 }
 
 export default getCustomerInfo;

@@ -57,3 +57,31 @@
     padding-right: 12px;
   }
 }
+.product-btn {
+  padding-bottom: 20px;
+}
+.basketAddItem-btn,
+.basketRemoveItem-btn {
+  @include btnBlue($width: 100px, $height: 30px);
+  @include font($size: 1.3rem, $height: 2rem, $weight: 500, $style: normal);
+  &:hover {
+    background: $Blue-dark;
+  }
+  height: 30px;
+}
+.basketRemoveItem-btn {
+  width: 170px;
+  margin-left: 20px;
+}
+.basketAddItem-btn:disabled,
+.basketRemoveItem-btn:disabled {
+  background: $Grey-primary;
+  cursor: auto;
+  color: $White;
+  border: none;
+}
+.goBack-btn {
+  align-self: flex-end;
+  max-width: 100px;
+  margin-bottom: 10px;
+}

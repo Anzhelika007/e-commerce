@@ -1,5 +1,6 @@
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 /* Components */
 import Header from '../components/header/header';
@@ -8,12 +9,16 @@ import Footer from '../components/footer/footer';
 import * as Pages from '../pages/pages';
 /* Style */
 import './app.scss';
+// Redux
 import { useAppDispatch } from '../redux/hooks';
-import { setAppToken, setAppAccessToken } from '../redux/store/appSlice';
-import { logout, setUserLogged } from '../redux/store/userSlice';
-import { createAccessToken } from '../services/api/getAppToken';
+import { logout } from '../redux/store/userSlice';
+// import { setAppToken } from '../redux/store/appSlice';
+// Services
+import { getAppToken } from '../services/api/getAppToken';
+import { getDiscountsCodes } from '../services/api/discounts';
+import { getAnonymousToken } from '../services/api/getAnonymousToken';
 import { getCustomerInfo } from '../services/api/getCustomerInfo';
-import store from '../redux/store/store';
+import { getCart } from '../services/api/cart';
 
 function App() {
   const navigate = useNavigate();
@@ -26,26 +31,26 @@ function App() {
     }
   }
   const dispatch = useAppDispatch();
-  const getInitialDate = async () => {
-    const appTokenStore = store.getState().appSlice.authToken;
-    const currenDateValue = new Date().getTime() / 1000;
-    if (
-      appTokenStore.expires_in < currenDateValue &&
-      appTokenStore.access_token === ''
-    ) {
-      dispatch(setAppAccessToken('fetching'));
-      const appToken = await createAccessToken();
-      dispatch(setAppToken(appToken));
+  const getInitialData = async () => {
+    await getAppToken(dispatch);
+    await getDiscountsCodes(dispatch);
+
+    const userInfo = await getCustomerInfo(dispatch);
+    if (userInfo.isError) {
+      dispatch(logout());
+      const anonymousToken = await getAnonymousToken(dispatch, true);
+      if (!anonymousToken.isError) {
+        getCart(dispatch);
+      }
+    } else {
+      getCart(dispatch);
     }
-    const userInfo = await getCustomerInfo();
-    if (!userInfo) dispatch(logout());
-    else dispatch(setUserLogged(userInfo));
     if (navigateTo) {
       navigate(`/${navigateTo}`);
     }
   };
   useEffect(() => {
-    getInitialDate();
+    getInitialData();
   });
 
   return (
@@ -68,6 +73,38 @@ function App() {
           </Route>
         </Routes>
       </main>
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          // Define default options
+          className: '',
+          duration: 2000,
+          style: {
+            border: '1px solid #713200',
+            padding: '16px',
+            color: 'white',
+            backgroundColor: 'green',
+          },
+          iconTheme: {
+            primary: 'white',
+            secondary: 'green',
+          },
+
+          // Default options for specific types
+          error: {
+            duration: 3000,
+            style: {
+              color: 'red',
+              backgroundColor: 'pink',
+            },
+            iconTheme: {
+              primary: 'white',
+              secondary: 'red',
+            },
+          },
+        }}
+      />
       <Footer />
     </>
   );

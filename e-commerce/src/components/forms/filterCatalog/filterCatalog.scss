@@ -1,0 +1,78 @@
+.form-filter {
+  width: 100%;
+  & > fieldset {
+    width: 100%;
+    padding: 0 10px 0 10px;
+  }
+  & > * legend {
+    font-size: 2rem;
+    padding-bottom: 0px;
+    line-height: 40px;
+  }
+  & > * input[type='number'] {
+    border-radius: 3px;
+    width: 90px;
+    padding: 3px;
+    margin-left: 10px;
+  }
+}
+label[for='priceMin'],
+label[for='priceMax'] {
+  display: flex;
+  justify-content: space-between;
+}
+label[for='priceMax'] {
+  padding: 10px 0 10px;
+}
+details {
+  margin-top: 30px;
+  width: 100%;
+  border-radius: 5px;
+  width: 180px;
+  align-self: self-start;
+  padding-left: 10px;
+}
+summary {
+  padding-top: 30px;
+  background-color: #2196f3;
+  color: white;
+  text-align: left;
+  padding: 5px 5px 5px 20px;
+  border-radius: 5px;
+  width: 180px;
+}
+
+details[open] summary {
+  border-radius: 5px 5px 0 0;
+  width: 180px;
+}
+
+.filter-fieldset {
+  height: 250px;
+  overflow-y: scroll;
+}
+.filter-model,
+.filter-color,
+.filter-price {
+  & > label {
+    margin-bottom: 0px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    width: 180px;
+  }
+}
+.filter-box-btn {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  width: 220px;
+}
+.filter-btn {
+  @include btnBlue;
+  width: 80px;
+  height: 30px;
+  &:hover {
+    background-color: $Blue-dark;
+  }
+}

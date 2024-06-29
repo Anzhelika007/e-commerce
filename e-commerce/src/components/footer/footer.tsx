@@ -10,7 +10,7 @@ function Footer() {
       <div className="footer__box wrapper">
         <div className="footer__top">
           <div className="footer__top-item">
-            <img className="footer-icon" src={Logo} alt="logo" />
+            <img className="footer-icon" src={Logo} alt="logoFooter" />
             <SlSocialVkontakte className="footer-icon" />
             <FaXTwitter className="footer-icon" />
             <FaFacebookF className="footer-icon" />
@@ -41,7 +41,7 @@ function Footer() {
           </div>
           <div className="footer__top-item">
             <div className="footer__contact-title">Our address</div>
-            <div className="footer__contact-adress">
+            <div className="footer__contact-address">
               Russia, Rostov-on-Don
               <br /> st. Bogacheva, 16
             </div>

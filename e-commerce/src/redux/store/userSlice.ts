@@ -16,6 +16,7 @@ export type Address = {
 
 export type User = {
   id: string;
+  version: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -49,6 +50,7 @@ if (someToken) {
 
 export const userInitial: User = {
   id: '',
+  version: '',
   email: '',
   firstName: '',
   lastName: '',
@@ -60,7 +62,7 @@ export const userInitial: User = {
   billingAddressIds: [],
 };
 
-const authTokenInitial: AuthToken = {
+export const authTokenInitial: AuthToken = {
   email: '',
   access_token: '',
   expires_in: 0,

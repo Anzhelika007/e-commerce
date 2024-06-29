@@ -8,15 +8,15 @@ type ChangePassword = {
 
 export async function changePassword(formData: ChangePassword) {
   const authToken = await getAppToken();
-  if (!authToken) return undefined;
+  if (authToken.isError) return undefined;
 
   const user = await getCustomerInfo();
-  if (!user) return undefined;
+  if (user.isError) return undefined;
 
-  const token = authToken.access_token;
+  const token = authToken.thing!.access_token;
   const requestData = {
-    id: user.id,
-    version: user.version,
+    id: user.thing!.id,
+    version: user.thing!.version,
     currentPassword: formData.currentPassword,
     newPassword: formData.newPassword,
   };

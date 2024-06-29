@@ -25,3 +25,4 @@ dist-ssr
 
 # Our project
 .vite
+*.mjs

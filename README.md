@@ -60,6 +60,9 @@
 - Runs all tests:
   `npm run test`
 
+- Checking code coverage by tests:
+  `npm run test:coverage`
+
 ## Project Team
 
 - Anzhalika Turlak - Frontend Developer

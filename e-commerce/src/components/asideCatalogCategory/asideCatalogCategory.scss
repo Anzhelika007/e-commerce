@@ -3,9 +3,9 @@
   width: 150px;
   padding-left: 0px;
   &:hover {
-    background-color: blue;
+    background-color: $Blue-medium;
   }
 }
 .category-btn-active {
-  background-color: #1034a6;
+  background-color: $Blue-dark;
 }

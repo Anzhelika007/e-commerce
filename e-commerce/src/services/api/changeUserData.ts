@@ -65,21 +65,21 @@ function creatingMainActions(formData: ChangeUserMainData, user: User) {
 
 export async function changeUserMainData(formData: ChangeUserMainData) {
   const user = await getCustomerInfo();
-  if (!user) return { statusCode: 'err', message: 'save failed' };
+  if (user.isError) return { statusCode: 'err', message: 'save failed' };
 
-  const updateActions = creatingMainActions(formData, user);
+  const updateActions = creatingMainActions(formData, user.thing!);
   if (updateActions.length === 0)
     return { statusCode: 'err', message: 'No changes nothing to save' };
 
   const userToken = await getUserToken();
-  if (!userToken) return { statusCode: 'err', message: 'save failed' };
+  if (userToken.isError) return { statusCode: 'err', message: 'save failed' };
 
   const body = {
-    version: user.version,
+    version: user.thing!.version,
     actions: updateActions,
   };
 
-  const answer = sendActions(body, userToken.access_token);
+  const answer = sendActions(body, userToken.thing!.access_token);
 
   return answer;
 }

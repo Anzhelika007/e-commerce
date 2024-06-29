@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
-import toast, { Toaster } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { useAppDispatch } from '../../../redux/hooks';
-import {
-  setUserLogged,
-  logout,
-  userInitial,
-} from '../../../redux/store/userSlice';
-import store from '../../../redux/store/store';
+import { logout, userInitial } from '../../../redux/store/userSlice';
+// import store from '../../../redux/store/store';
 import TextField from '../elements/textField';
 import ChangePassword from '../floatForms/changePassword';
 import UserMainData from '../floatForms/userMainData';
@@ -23,9 +19,9 @@ function UserProfile(): React.ReactElement {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  async function updatesetUserData() {
-    const user = await getCustomerInfo(true);
-    if (user) setUserData(user);
+  async function updateUserData() {
+    const user = await getCustomerInfo(dispatch, true);
+    if (!user.isError) setUserData(user.thing!);
   }
 
   const showToast = ({
@@ -35,33 +31,11 @@ function UserProfile(): React.ReactElement {
     message: string;
     thisError: boolean;
   }) => {
-    updatesetUserData();
+    updateUserData();
     if (!thisError) {
-      toast.success(message, {
-        style: {
-          border: '1px solid #713200',
-          padding: '16px',
-          color: 'white',
-          backgroundColor: 'green',
-        },
-        iconTheme: {
-          primary: 'white',
-          secondary: 'green',
-        },
-      });
+      toast.success(message);
     } else {
-      toast.error(message, {
-        style: {
-          border: '1px solid #713200',
-          padding: '16px',
-          color: 'red',
-          backgroundColor: 'pink',
-        },
-        iconTheme: {
-          primary: 'white',
-          secondary: 'red',
-        },
-      });
+      toast.error(message);
     }
   };
 
@@ -84,10 +58,11 @@ function UserProfile(): React.ReactElement {
 
   const modalStylesMain = {
     content: {
-      top: '5%',
+      top: '90px',
       width: '80vw',
       margin: '0 auto',
       height: 'max-content',
+      maxHeight: '80vh',
     },
   };
 
@@ -136,35 +111,35 @@ function UserProfile(): React.ReactElement {
       showToast({ message, thisError: true });
       return;
     }
-    const userInfo = await getCustomerInfo(true);
-    if (userInfo) {
-      dispatch(setUserLogged(userInfo));
-    }
+    await getCustomerInfo(dispatch, true);
     showToast({
       message: 'Address deleted',
       thisError: false,
     });
   };
 
-  useEffect(() => {
-    const appTokenStore = store.getState().userSlice.authToken.access_token;
-    if (appTokenStore.length === 0) {
-      // the next line leads to an infinite test
-      // navigate(`/login`);
-    }
-  });
+  // useEffect(() => {
+  //   const appTokenStore = store.getState().userSlice.authToken.access_token;
+  //   if (appTokenStore.length === 0) {
+  //     // the next line leads to an infinite test
+  //     // navigate(`/login`);
+  //   }
+  // });
 
   const getUserInfo = async () => {
-    const userInfo = await getCustomerInfo();
+    const userInfo = await getCustomerInfo(dispatch);
 
-    if (!userInfo) {
+    if (userInfo.isError) {
       dispatch(logout());
       navigate(`/login`);
     } else {
-      // There are here is a date about customer
-      dispatch(setUserLogged(userInfo));
-      setUserData(userInfo);
+      setUserData(userInfo.thing!);
     }
+  };
+
+  const dateToString = (date: string) => {
+    const dateParts = date.split('-');
+    return `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
   };
 
   useEffect(() => {
@@ -236,7 +211,7 @@ function UserProfile(): React.ReactElement {
               classNameTitle="textfield-title"
               classNameBody="textfield-body"
               title="Date of Birth"
-              value={userData.dateOfBirth}
+              value={dateToString(userData.dateOfBirth)}
             />
 
             <TextField
@@ -257,7 +232,6 @@ function UserProfile(): React.ReactElement {
         onDeleteClick={clickDeleteAddress}
         userInfoProp={userData}
       />
-      <Toaster position="top-right" reverseOrder={false} />
     </>
   );
 }
